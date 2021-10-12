@@ -1,24 +1,20 @@
-package com.amenity_reservation_system.domain;
+package com.amenity_reservation_system.model;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.OffsetDateTime;
-import java.util.Set;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.SequenceGenerator;
-import lombok.Getter;
-import lombok.Setter;
+import javax.persistence.*;
+
+import lombok.*;
 
 
 @Entity
 @Getter
 @Setter
-public class User {
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class Reservation {
 
     @Id
     @Column(nullable = false, updatable = false)
@@ -34,8 +30,22 @@ public class User {
     )
     private Long id;
 
-    @OneToMany(mappedBy = "user")
-    private Set<Reservation> userReservations;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private AmenityType amenityType;
+
+    @Column(nullable = false)
+    private LocalDate reservationDate;
+
+    @Column(nullable = false)
+    private LocalTime startTime;
+
+    @Column(nullable = false)
+    private LocalTime endTime;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @Column(nullable = false, updatable = false)
     private OffsetDateTime dateCreated;
